@@ -18,7 +18,7 @@ We want to build a [Markdown](https://daringfireball.net/projects/markdown/) edi
 1. Single level unordered and ordered [lists](https://spec.commonmark.org/0.29/#lists) using only `-` and `1` characters, respectively.
 1. [Blockquotes](https://spec.commonmark.org/0.29/#block-quotes) containing plain text.
 
-[screenshot placeholder]
+![Sample screenshot](https://user-images.githubusercontent.com/768643/80896544-60440700-8cbd-11ea-8905-b1d2f6617522.png)
 
 ## How do I get started?
 
