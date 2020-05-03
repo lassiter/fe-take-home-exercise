@@ -2,7 +2,7 @@
 
 Hey there! We are excited that you are interested in joining our team at Bizly.
 
-This exercise helps us gain a deeper understanding of your technical capabilities and how you solve problems. It should take no longer than 1-2 hours for this task. Creativity is highly encouraged, and you're welcome to use any libraries and tools. 
+This exercise helps us gain a deeper understanding of your technical capabilities and how you solve problems. It should take no longer than 1-2 hours. Creativity is highly encouraged, and you're welcome to use any libraries and tools. 
 
 To help us get started, we've bootstrapped the project with [Create React App](http://create-react-app.dev/) using the TypeScript template. Please fork this repository, and submit the results by sharing your fork with us—we enjoy seeing your commits.
 
@@ -10,7 +10,7 @@ We can't wait to see what you have to show us!
 
 ## What is the exercise?
 
-We want to build a [Markdown](https://daringfireball.net/projects/markdown/) editor that follows the [CommonMark](https://commonmark.org/) specifications. The CommonMark specification is quite extensive, so we have identified a couple of key use cases that we would like to address for our users in our first iteration:
+We want to build a [Markdown](https://daringfireball.net/projects/markdown/) editor that follows the [CommonMark](https://commonmark.org/) specifications. The CommonMark specification is quite extensive, so we identified a couple of key use cases that we would like to address for our users in our first iteration:
 
 1. Top 3 levels of [ATX headings](https://spec.commonmark.org/0.29/#atx-headings).
 1. Simple [paragraph] texts.
