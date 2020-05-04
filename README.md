@@ -2,7 +2,7 @@
 
 Hey there! We are excited that you are interested in joining our team at Bizly.
 
-This exercise helps us gain a deeper understanding of your technical capabilities and how you solve problems. It should take no longer than 1-2 hours. Creativity is highly encouraged, and you're welcome to use any libraries and tools. 
+This exercise helps us gain a deeper understanding of your technical capabilities and how you solve problems. It should take no longer than 1-2 hours. Creativity is highly encouraged, and you’re welcome to use any libraries/tools as long as they don’t complete the actual exercise for you, such as a pre-built markdown parser.
 
 To help us get started, we've bootstrapped the project with [Create React App](http://create-react-app.dev/) using the TypeScript template. Please fork this repository, and submit the results by sharing your fork with us—we enjoy seeing your commits.
 
