@@ -1,6 +1,30 @@
 import { parseText, parseMarkdown, Node } from 'MarkdownParser';
 
 describe('markdownParser', () => {
+    describe('blockquotes', () => {
+        test('should create node for basic blockquote', () => {
+            expect(parseMarkdown(['> Do or do not. There is no try.'])).toEqual([
+                {
+                    nodeType: 'blockquote',
+                    value: 'blockquote',
+                    content: [
+                        {
+                            nodeType: 'paragraph',
+                            value: 'p',
+                            content: [
+                                {
+                                    nodeType: 'text',
+                                    value: 'Do or do not. There is no try.',
+                                    isBold: false,
+                                    isItalic: false,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ]);
+        });
+    });
     describe('headers', () => {
         const content = [
             {

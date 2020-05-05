@@ -70,7 +70,7 @@ export const parseText = (value: string): Node[] => {
 /**
  * Helper function to determine if the node value is a parent html element for the purposes of nesting.
  */
-export const isList = (value: string): boolean => value === 'ol' || value === 'ul';
+export const isList = (value: string): boolean => value === 'ol' || value === 'ul' || value === 'blockquote';
 
 /**
  * Simple helper function to make parser code more readable.
@@ -83,6 +83,22 @@ const createInitalList = (childNode: Node, nodeType: string, nodeValue: string =
     value: nodeValue,
     content: [childNode],
 });
+
+/**
+ * Handler for blockquote node
+ */
+const parseBlockQuote = (str: string): ParserTupleResponse => {
+    const [, , paragraph] = parseParagraph(str.slice(2));
+    return [
+        '',
+        '',
+        {
+            nodeType: 'blockquote',
+            value: 'blockquote',
+            content: [paragraph],
+        },
+    ];
+};
 
 /**
  * Handler for header node
@@ -172,6 +188,9 @@ const parser = (str: string = ''): ParserTupleResponse => {
     } else if (/\#\s/.test(str)) {
         // Headers
         return parseHeader(str);
+    } else if (/\>\s/.test(str)) {
+        // Blockquotes
+        return parseBlockQuote(str);
     }
     // Paragraphs
     return parseParagraph(str);
