@@ -1,4 +1,4 @@
-import { parseText, parseMarkdown } from 'MarkdownParser';
+import { parseText, parseMarkdown, Node } from 'MarkdownParser';
 
 describe('markdownParser', () => {
     describe('headers', () => {
@@ -34,6 +34,91 @@ describe('markdownParser', () => {
                     ],
                 },
             ]);
+        });
+    });
+    describe('lists', () => {
+        const genericTestList = [
+            {
+                nodeType: 'list',
+                value: 'li',
+                content: [
+                    {
+                        nodeType: 'text',
+                        value: 'test 1',
+                        isBold: false,
+                        isItalic: false,
+                    },
+                ],
+            },
+            {
+                nodeType: 'list',
+                value: 'li',
+                content: [
+                    {
+                        nodeType: 'text',
+                        value: 'test 2',
+                        isBold: false,
+                        isItalic: false,
+                    },
+                ],
+            },
+            {
+                nodeType: 'list',
+                value: 'li',
+                content: [
+                    {
+                        nodeType: 'text',
+                        value: 'test 3',
+                        isBold: false,
+                        isItalic: false,
+                    },
+                ],
+            },
+        ];
+        test('should create node tree for ul', () => {
+            const ulList = ['- test 1', '- test 2', '- test 3'];
+            const expectedDataStructure: Node[] = [
+                {
+                    nodeType: 'unorderedList',
+                    value: 'ul',
+                    content: genericTestList,
+                },
+            ];
+            expect(parseMarkdown(ulList)).toEqual(expectedDataStructure);
+        });
+        test('should create node tree for ul', () => {
+            const ulList = ['1. test 1', '2. test 2', '3. test 3'];
+            const expectedDataStructure: Node[] = [
+                {
+                    nodeType: 'orderedList',
+                    value: 'ol',
+                    content: genericTestList,
+                },
+            ];
+            expect(parseMarkdown(ulList)).toEqual(expectedDataStructure);
+        });
+        test('should allow elements before list node', () => {
+            const ulList = ['example', '1. test 1', '2. test 2', '3. test 3'];
+            const expectedDataStructure: Node[] = [
+                {
+                    nodeType: 'paragraph',
+                    value: 'p',
+                    content: [
+                        {
+                            nodeType: 'text',
+                            value: 'example',
+                            isBold: false,
+                            isItalic: false,
+                        },
+                    ],
+                },
+                {
+                    nodeType: 'orderedList',
+                    value: 'ol',
+                    content: genericTestList,
+                },
+            ];
+            expect(parseMarkdown(ulList)).toEqual(expectedDataStructure);
         });
     });
     describe('paragraphs', () => {
