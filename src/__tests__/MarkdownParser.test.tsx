@@ -1,6 +1,41 @@
 import { parseText, parseMarkdown } from 'MarkdownParser';
 
 describe('markdownParser', () => {
+    describe('headers', () => {
+        const content = [
+            {
+                nodeType: 'text',
+                value: 'example',
+                isBold: false,
+                isItalic: false,
+            },
+        ];
+        test('should create node for header 1', () => {
+            expect(parseMarkdown(['# example'])).toEqual([{ nodeType: 'header', value: 'h1', content }]);
+        });
+        test('should create node for header 2', () => {
+            expect(parseMarkdown(['## example'])).toEqual([{ nodeType: 'header', value: 'h2', content }]);
+        });
+        test('should create node for header 3', () => {
+            expect(parseMarkdown(['### example'])).toEqual([{ nodeType: 'header', value: 'h3', content }]);
+        });
+        test('should create node for header but avoid extra hashes', () => {
+            expect(parseMarkdown(['# example #hashtag blog post'])).toEqual([
+                {
+                    nodeType: 'header',
+                    value: 'h1',
+                    content: [
+                        {
+                            nodeType: 'text',
+                            value: 'example #hashtag blog post',
+                            isBold: false,
+                            isItalic: false,
+                        },
+                    ],
+                },
+            ]);
+        });
+    });
     describe('paragraphs', () => {
         test('should create node for malformed headers', () => {
             expect(parseMarkdown(['####### example'])).toEqual([

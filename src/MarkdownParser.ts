@@ -68,6 +68,29 @@ export const parseText = (value: string): Node[] => {
 // parseHandlers
 
 /**
+ * Handler for header node
+ */
+const parseHeader = (str: string = ''): ParserTupleResponse => {
+    // We're splitting based on space, grabbing the first group and seeing how many hashes are there.
+    const numberOfHashes = str.split(' ')[0].match(/\#/g).length;
+    // If we have more than 6, it means it's malformed. h1, h2, h3, h4, h5, h6 support only.
+    if (numberOfHashes > 6) {
+        return parseParagraph(str); // there is no h7, h8, or etc
+    }
+    const trimmedString = str.slice(numberOfHashes + 1); // 1 accounts for space
+
+    return [
+        'root',
+        'root',
+        {
+            nodeType: 'header',
+            value: `h${numberOfHashes}`,
+            content: parseText(trimmedString),
+        },
+    ];
+};
+
+/**
  * Handler for paragraph node
  */
 const parseParagraph = (value: string): ParserTupleResponse => {
@@ -86,6 +109,10 @@ const parseParagraph = (value: string): ParserTupleResponse => {
  * Main parser
  */
 const parser = (str: string = ''): ParserTupleResponse => {
+    if (/\#\s/.test(str)) {
+        // Headers
+        return parseHeader(str);
+    }
     // Paragraphs
     return parseParagraph(str);
 };
