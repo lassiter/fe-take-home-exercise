@@ -64,3 +64,41 @@ export const parseText = (value: string): Node[] => {
         },
     ];
 };
+
+// parseHandlers
+
+/**
+ * Handler for paragraph node
+ */
+const parseParagraph = (value: string): ParserTupleResponse => {
+    return [
+        'root',
+        'root',
+        {
+            nodeType: `paragraph`,
+            value: 'p',
+            content: parseText(value),
+        },
+    ];
+};
+
+/**
+ * Main parser
+ */
+const parser = (str: string = ''): ParserTupleResponse => {
+    // Paragraphs
+    return parseParagraph(str);
+};
+
+/**
+ * This function handles the nesting and calling the parser.
+ * @param stringArr This is an array of strings that have been split by line breaks from the textinput.
+ */
+export const parseMarkdown = (stringArr: string[]) => {
+    const parsedNodes: Node[] = [];
+    stringArr.forEach((str) => {
+        const [, , node] = parser(str);
+        parsedNodes.push(node);
+    });
+    return parsedNodes;
+};
