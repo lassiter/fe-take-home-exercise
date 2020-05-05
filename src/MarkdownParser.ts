@@ -15,7 +15,9 @@ export interface Node {
  */
 type ParserTupleResponse = [string, string, Node];
 
-const COMBINED = /(\*\*.*?\*\*|__.*?__|\*.*?\*|_.*?_)/;
+const COMBINED = /(\*\*.*?\*\*|__.*?__|\*.*?\*|_.*?_|\[[\w]+\]\(.*\))/;
+const LINK = /\[[\w]+\]\(.*\)/;
+const STRICT_LINK = /^\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+)\)$/;
 const BOLD = /(\*\*.*?\*\*|__.*?__)/g;
 const ITALIC = /(\*.*?\*|_.*?_)/g;
 const REPLACE = /\*|_/g;
@@ -28,7 +30,21 @@ export const parseText = (value: string): Node[] => {
         const textNodeArray: Node[] = [];
         const val = value.split(COMBINED);
         val.forEach((phrase) => {
-            if (BOLD.test(phrase)) {
+            if (phrase === '') {
+                return;
+            }
+            if (LINK.test(phrase)) {
+                const [, value, href] = phrase.split(STRICT_LINK);
+                textNodeArray.push({
+                    nodeType: 'link',
+                    value,
+                    isBold: false,
+                    isItalic: false,
+                    data: {
+                        href,
+                    },
+                });
+            } else if (BOLD.test(phrase)) {
                 textNodeArray.push({
                     nodeType: 'text',
                     value: phrase.replace(REPLACE, ''),

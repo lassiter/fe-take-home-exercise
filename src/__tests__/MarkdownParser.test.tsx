@@ -467,4 +467,20 @@ describe('parseText', () => {
             expect(parseText('This test must pass!')).toEqual(expectedDataStructure);
         });
     });
+    describe('link', () => {
+        test('should create a link node in the content array', () => {
+            const expectedDataStructure: Node[] = [
+                {
+                    nodeType: 'link',
+                    value: 'Bizly',
+                    isBold: false,
+                    isItalic: false,
+                    data: {
+                        href: 'https://bizly.com',
+                    },
+                },
+            ];
+            expect(parseText('[Bizly](https://bizly.com)')).toEqual(expectedDataStructure);
+        });
+    });
 });
