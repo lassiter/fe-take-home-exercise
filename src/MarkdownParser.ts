@@ -65,7 +65,24 @@ export const parseText = (value: string): Node[] => {
     ];
 };
 
-// parseHandlers
+// parseHandlers and helpers
+
+/**
+ * Helper function to determine if the node value is a parent html element for the purposes of nesting.
+ */
+export const isList = (value: string): boolean => value === 'ol' || value === 'ul';
+
+/**
+ * Simple helper function to make parser code more readable.
+ * @param childNode Node struct of child content
+ * @param nodeType Debugging nodeType
+ * @param nodeValue element value for parent node
+ */
+const createInitalList = (childNode: Node, nodeType: string, nodeValue: string = ''): Node => ({
+    nodeType,
+    value: nodeValue,
+    content: [childNode],
+});
 
 /**
  * Handler for header node
@@ -106,10 +123,53 @@ const parseParagraph = (value: string): ParserTupleResponse => {
 };
 
 /**
+ * Handler for root list nodes
+ */
+const parseRootList = (str: string, parentValue: string, parentNodeType: string): ParserTupleResponse => {
+    if (parentValue === 'ul') {
+        return [
+            parentNodeType,
+            parentValue,
+            {
+                nodeType: 'list',
+                value: 'li',
+                content: parseText(str.slice(2)),
+            },
+        ];
+    }
+    if (parentValue === 'ol') {
+        return [
+            parentNodeType,
+            parentValue,
+            {
+                nodeType: 'list',
+                value: 'li',
+                content: parseText(str.slice(3)),
+            },
+        ];
+    }
+    return [
+        'none',
+        'none',
+        {
+            nodeType: 'list',
+            value: 'li',
+            content: parseText(str),
+        },
+    ];
+};
+
+/**
  * Main parser
  */
 const parser = (str: string = ''): ParserTupleResponse => {
-    if (/\#\s/.test(str)) {
+    if (/[0-9]\.\s/.test(str)) {
+        // Ordered List
+        return parseRootList(str, 'ol', 'orderedList');
+    } else if (/\-\s/.test(str)) {
+        // Unordered List
+        return parseRootList(str, 'ul', 'unorderedList');
+    } else if (/\#\s/.test(str)) {
         // Headers
         return parseHeader(str);
     }
@@ -124,8 +184,25 @@ const parser = (str: string = ''): ParserTupleResponse => {
 export const parseMarkdown = (stringArr: string[]) => {
     const parsedNodes: Node[] = [];
     stringArr.forEach((str) => {
-        const [, , node] = parser(str);
-        parsedNodes.push(node);
+        // Current last node used to determine if adding the string node to a list.
+        const lastNode = parsedNodes[parsedNodes.length - 1];
+
+        // parentNodeType is used for quick grep/debugging data structures, parentValue is the html elment for the object.
+        const [parentNodeType, parentValue, node] = parser(str);
+
+        // If a ul or ol
+        if (isList(parentValue)) {
+            // If there is an existing node that matches the value, insert content.
+            if (isList(lastNode?.value) && lastNode?.value === parentValue) {
+                lastNode.content?.push(node);
+                // If there is not a match for the value, create an inital list object.
+            } else if (parentValue !== lastNode?.value) {
+                parsedNodes.push(createInitalList(node, parentNodeType, parentValue));
+            }
+            // If a header or top level paragraph, append to parsedNodes.
+        } else {
+            parsedNodes.push(node);
+        }
     });
     return parsedNodes;
 };
